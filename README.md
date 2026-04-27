@@ -21,7 +21,7 @@ A lightweight Python-based reconnaissance tool designed to scan open ports on a 
 ## ⚙️ How to Run
 
 ```bash
-python recon_tool_v1.py
+python mini-recon-tool.py
 ```
 
 ## 📌 Example Output
