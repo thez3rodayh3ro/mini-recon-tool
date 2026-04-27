@@ -1,4 +1,7 @@
 # ============================================
+# Licensed under the MIT License.
+# See LICENSE file in the project root for full license information.
+
 # Mini Recon Tool (Python)
 # Author: Rahul DasGupta
 # Copyright (c) 2026 Rahul DasGupta
