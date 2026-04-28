@@ -30,8 +30,16 @@ target = input("Enter target:")
 try:
     target_ip = socket.gethostbyname(target)
     #print(target_ip)
-    response = requests.get(f"https://ipinfo.io/{target_ip}/json").json()
-except:
+    try:
+        response = requests.get(f"https://ipinfo.io/{target_ip}/json").json()
+        print("\n--- TARGET INFO ---")
+        print("IP:", target_ip)
+        print("Org:", response.get("org"))
+        print("Location:", response.get("city"), response.get("country"))
+    except Exception as e:
+        print(f"Error fetching IP info: {e}")
+        response = {}
+except socket.gaierror:
     print("Invalid target")
     exit()
 start = time.time()
@@ -44,7 +52,7 @@ for port in range(20,444):
     sock.settimeout(0.5)
     try:
         result = sock.connect_ex((target_ip, port))
-
+        print(f"Scanning port {port}...")
         if result == 0:
             print(f"PORT {port} {common_ports[port]} is OPEN")
             service = common_ports[port]
