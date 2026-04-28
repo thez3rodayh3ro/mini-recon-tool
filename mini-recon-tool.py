@@ -22,6 +22,7 @@
 # INPUT TARGET
 import socket
 import time
+import requests
 
 open_ports = []
 target = input("Enter target:")
@@ -29,6 +30,7 @@ target = input("Enter target:")
 try:
     target_ip = socket.gethostbyname(target)
     #print(target_ip)
+    response = requests.get(f"https://ipinfo.io/{target_ip}/json").json()
 except:
     print("Invalid target")
     exit()
@@ -59,6 +61,11 @@ with open(f"scan_results_{target_ip}.txt", "w") as f:
         f.write(f"{port} - {service}\n")
     # SUMMARY
     end = time.time()
-    f.write("\n--- SUMMARY ---")
+    f.write("\n--- Target Information ---")
+    f.write(f"\nIP Address: {target_ip}")
+    f.write(f"\nOrg:", response.get("org"))
+    f.write(f"\nLocation:", response.get("city"), response.get("country"))
+    f.write("\n\n--- SUMMARY ---")
     f.write(f"\nTotal Open Ports: {len(open_ports)}")
     f.write(f"\nScan Time: {end - start:.2f} seconds")
+
