@@ -37,7 +37,6 @@ Scan Time: 1.23 seconds
 
 ## 🔮 Future Improvements
 
-* API integration (IP intelligence, geo lookup)
 * Multi-threaded scanning for speed
 * Banner grabbing
 * Vulnerability detection logic
