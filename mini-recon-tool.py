@@ -46,7 +46,8 @@ def scan_ports(target_ip):
     import socket
     open_ports = []
     common_ports = {21: "FTP",22: "SSH",80: "HTTP",443: "HTTPS"}
-
+    print("\n--- OPEN PORTS ---")
+    
     for port in range(20,444):
         # CREATE SOCKET
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -55,7 +56,6 @@ def scan_ports(target_ip):
             # CONNECT TO PORT
             result = sock.connect_ex((target_ip, port))
             if result == 0:
-                print("\n--- OPEN PORTS ---")
                 print(f"PORT {port} {common_ports[port]} is OPEN")
                 
                 # GET SERVICE NAME
