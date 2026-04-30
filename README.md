@@ -27,12 +27,18 @@ python mini-recon-tool.py
 ## 📌 Example Output
 
 ```
-OPEN: 22 (SSH)
-OPEN: 80 (HTTP)
+--- OPEN PORTS ---
+80 - HTTP
+443 - HTTPS
+
+--- Target Information ---
+IP Address: 18.155.106.65
+Org: AS16509 Amazon.com, Inc.
+Location: Kolkata, IN
 
 --- SUMMARY ---
 Total Open Ports: 2
-Scan Time: 1.23 seconds
+Scan Time: 218.53 seconds
 ```
 
 ## 🔮 Future Improvements
