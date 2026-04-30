@@ -52,8 +52,8 @@ def scan_ports(target_ip):
     try:
         lower = int(input("Enter lower port range (default 20): ") or 20)
         upper = int(input("Enter upper port range (default 3306): ") or 3306)
-    except ValueError:
-        print("Invalid input. Using default range.")
+    except ValueError as e:
+        print(f"Invalid input: {e}. Using default range.")
         lower, upper = 20, 3306
 
     for port in range(lower, upper + 1):
