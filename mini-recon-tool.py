@@ -30,7 +30,7 @@ def resolve_target(target):
           print(f"Error resolving target: {e}")
           return None
      
-# Get IP info using ipinfo.io API
+# Get IP info using ipinfo.io API call
 def get_request(target_ip):
     import requests
     try:
@@ -48,7 +48,15 @@ def scan_ports(target_ip):
     common_ports = {21: "FTP",22: "SSH",80: "HTTP",443: "HTTPS"}
     print("\n--- OPEN PORTS ---")
     
-    for port in range(20,444):
+    # Enter range of ports to scan
+    try:
+        lower = int(input("Enter lower port range (default 20): ") or 20)
+        upper = int(input("Enter upper port range (default 3306): ") or 3306)
+    except ValueError:
+        print("Invalid input. Using default range.")
+        lower, upper = 20, 3306
+
+    for port in range(lower, upper + 1):
         # CREATE SOCKET
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(0.5)
@@ -95,6 +103,7 @@ def save_results(target_ip, open_ports, response, start):
 # MAIN FUNCTION
 import time
 start = time.time()
+# GET TARGET INPUT
 target = input("Enter target:")
 # Resolve target to IP address
 target_ip = resolve_target(target)
