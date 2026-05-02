@@ -50,33 +50,43 @@ def get_request(target_ip):
     return response
 
 # PORT SCANNING
-def scan_ports(target_ip, lower, upper):
+def scan_port(target_ip, port, open_ports, lock):
     import socket
-    open_ports = []
     common_ports = {21: "FTP",22: "SSH",80: "HTTP",443: "HTTPS"}
-    print("\n--- OPEN PORTS ---")
-    # Range of ports to scan
-    for port in range(lower, upper + 1):
-        # CREATE SOCKET
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(0.5)
-        try:
-            # CONNECT TO PORT
-            result = sock.connect_ex((target_ip, port))
-            if result == 0:
+    # CREATE SOCKET
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(0.5)
+    try:
+        # CONNECT TO PORT
+        result = sock.connect_ex((target_ip, port))
+        if result == 0:
+            with lock:
                 print(f"PORT {port} {common_ports[port]} is OPEN")
-                
                 # GET SERVICE NAME
                 service = common_ports[port]
-
                 # APPEND OPEN PORTS
                 open_ports.append((port,service))
-        except Exception as e:
-                print(f"Error on port: {e}")
-        finally:
-                sock.close()
-    return open_ports
+    except Exception as e:
+        print(f"Error on port: {e}")
+    finally:
+        sock.close()
 
+# THREADING FOR FASTER SCANNING
+def threaded_scan(target_ip, lower, upper):
+    import threading
+    threads = []
+    open_ports = []
+    lock = threading.Lock()
+
+    for port in range(lower, upper + 1):
+        # 
+        t = threading.Thread(target=scan_port,args=(target_ip, port, open_ports, lock))
+        t.start()
+        threads.append(t)
+
+    for t in threads:
+        t.join()
+    return open_ports
 # SAVE RESULTS
 def save_results(target_ip, open_ports, response, start, target):
     try:
@@ -122,24 +132,26 @@ else:
     for target in targets:
         print("\n========================")
         print(f"\nProcessing target: {target}")
+        # RESOLVE TARGET TO IP ADDRESS
         target_ip = resolve_target(target)
         if not target_ip:
             print("Failed to resolve target IP.")
             continue
         # Get IP info using ipinfo.io API
         start = time.time()
+        # MAKE API CALL
         response = get_request(target_ip)
         print("\n--- TARGET INFO ---")
         print("IP:", target_ip)
         print("Org:", response.get("org"))
         print("Location:", response.get("city"), response.get("country"))
-
+        print("\n --- SCANNING PORTS ---")
         # PORT SCANNING
-        open_ports = scan_ports(target_ip, lower, upper)
+        open_ports = threaded_scan(target_ip, lower, upper)
         # SAVE RESULTS
         save_results(target_ip, open_ports, response, start, target)
     print("\n========================")
-    print("Batch Recon Complete. Report(s) saved.") 
+    print("Batch Recon Complete.") 
 
      
 
