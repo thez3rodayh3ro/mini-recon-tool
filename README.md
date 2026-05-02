@@ -43,7 +43,6 @@ Scan Time: 218.53 seconds
 
 ## 🔮 Future Improvements
 
-* Multi-threaded scanning for speed
 * Banner grabbing
 * Vulnerability detection logic
 
